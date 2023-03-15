@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using WebApplication1.Forms;
 
 namespace WebApplication1.Pages
 {
@@ -7,6 +8,10 @@ namespace WebApplication1.Pages
     {
         private readonly ILogger<IndexModel> _logger;
 
+        [BindProperty]
+        public Formularz FizzBuzz { set; get; }
+        [BindProperty(SupportsGet = true)]        
+        public string Name { get; set; }
         public IndexModel(ILogger<IndexModel> logger)
         {
             _logger = logger;
@@ -14,7 +19,19 @@ namespace WebApplication1.Pages
 
         public void OnGet()
         {
-
+            if(string.IsNullOrWhiteSpace(Name))
+            {
+                Name = "Uzytkowniku domyslny";
+            }
+        }
+        public IActionResult OnPost()
+        {
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+        
+            return RedirectToPage("./Privacy");
         }
     }
 }

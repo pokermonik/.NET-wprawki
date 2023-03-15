@@ -5,6 +5,11 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Dzień Dobry!</h1>
-    <p>lorem isum <a href="https://docs.microsoft.com/aspnet/core">coś tam coś tam</a>.</p>
+    <h1 class="display-4">Dzień Dobry! @Model.Name</h1>
+    <span asp-validation-for="FizzBuzz.Number" class="text-danger"></span>
+        <form method="post">
+            <label asp-for="FizzBuzz.Number"></label>
+            <input asp-for="FizzBuzz.Number" /><br />
+            <button type="submit">Zatwierdź</button>
+        </form>
 </div>
