@@ -12,6 +12,7 @@ namespace WebApplication1.Pages
         public Formularz FizzBuzz { set; get; }
         [BindProperty(SupportsGet = true)]        
         public string Name { get; set; }
+        public string Result { get; set; }
         public IndexModel(ILogger<IndexModel> logger)
         {
             _logger = logger;
@@ -26,11 +27,13 @@ namespace WebApplication1.Pages
         }
         public IActionResult OnPost()
         {
+            Result = FizzBuzz.Checker(FizzBuzz.Number);
+
             if (!ModelState.IsValid)
             {
                 return Page();
             }
-        
+
             return RedirectToPage("./Privacy");
         }
     }
