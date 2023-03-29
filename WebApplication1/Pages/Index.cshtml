@@ -17,7 +17,7 @@
         <button type="submit" class="btn btn-primary">Zatwierdź</button>
         </form>
         <br />
-    @if(Model.Result!="")
+    @if (!string.IsNullOrEmpty(Model.Result))
     {
         @if(Model.Result=="Fizz" || Model.Result=="Buzz"|| Model.Result=="FizzBuzz")
         {
