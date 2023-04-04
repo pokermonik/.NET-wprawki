@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using WebApplication1.Forms;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace WebApplication1.Pages
 {
@@ -10,9 +12,13 @@ namespace WebApplication1.Pages
 
         [BindProperty]
         public Formularz FizzBuzz { set; get; }
+        [BindProperty]
+        public FormularzImie FizzBuzzImie { set; get; }
         [BindProperty(SupportsGet = true)]        
-        public string Name { get; set; }
-        public string Result { get; set; }
+       
+        public List<string> Results { get; set; }
+
+        public string? Result { get; set; }
         public IndexModel(ILogger<IndexModel> logger)
         {
             _logger = logger;
@@ -20,21 +26,31 @@ namespace WebApplication1.Pages
 
         public void OnGet()
         {
-            if(string.IsNullOrWhiteSpace(Name))
-            {
-                Name = "Uzytkowniku domyslny";
-            }
+ 
         }
         public IActionResult OnPost()
         {
-            Result = FizzBuzz.Checker(FizzBuzz.Number);
 
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return Page();
-            }
 
-            return RedirectToPage("./Privacy");
+                Result = FizzBuzzImie.Checker(FizzBuzzImie.Imie) + FizzBuzz.Checker(FizzBuzz.Number);
+                if (HttpContext.Session.GetString("Results") != null)
+                {
+                    Results = JsonConvert.DeserializeObject<List<string>>(HttpContext.Session.GetString("Results"));
+                    Results.Add(Result);
+                }
+                else
+                {
+                    Results = new List<string> { Result };
+                }
+                HttpContext.Session.SetString("Results",JsonConvert.SerializeObject(Results));
+            }
+     
+                return Page();
+            
+     
+
         }
     }
 }

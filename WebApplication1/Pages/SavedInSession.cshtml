@@ -1,0 +1,15 @@
+﻿@page
+@model SavedInSessionModel
+@{
+    ViewData["Title"] = "Data in session";
+}
+<p>Dane zapisane w sesji</p>
+@if (Model.Results != null)
+{
+    <ul>
+        @foreach (var item in Model.Results)
+        {
+            <li>@item</li>
+        }
+    </ul>
+}

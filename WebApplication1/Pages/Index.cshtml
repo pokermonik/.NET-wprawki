@@ -6,32 +6,27 @@
 }
 
 <div class"form-group col-md-6">
-    <h1 class="display-4">Dzień Dobry! @Model.Name</h1>
-    <span asp-validation-for="FizzBuzz.Number" class="text-danger"></span>
+    <h1 class="display-4">Dzień Dobry!</h1>
+    <span asp-validation-for="FizzBuzz.Number" class="text-danger" style="font-weight:bold;"></span>
+    
         <form method="post" >
         <label asp-for="FizzBuzz.Number"></label>
         <br />
             
-        <input asp-for="FizzBuzz.Number" class="form-control" style="width:30%;"/>
+        <input asp-for="FizzBuzz.Number" class="form-control" required  style="width:30%;"/>
             <br/>
+        <label asp-for="FizzBuzzImie.Imie"></label>
+        <br />
+        <span asp-validation-for="FizzBuzzImie.Imie" class="text-danger" style="font-weight:bold;"></span>
+        <input asp-for="FizzBuzzImie.Imie" class="form-control" maxlength="100" required style="width:30%;" />
         <button type="submit" class="btn btn-primary">Zatwierdź</button>
         </form>
         <br />
     @if (!string.IsNullOrEmpty(Model.Result))
     {
-        @if(Model.Result=="Fizz" || Model.Result=="Buzz"|| Model.Result=="FizzBuzz")
-        {
             <div class="alert alert-success" style="width:30%;" role="alert">
                 @Model.Result
             </div>
-        }
-        else
-        {
-            <div class="alert alert-danger" style="width:30%;" role="alert">
-                @Model.Result
-            </div>
-        }
-
     }
 
 </div>
