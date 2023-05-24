@@ -7,15 +7,17 @@ using WebApplication1.Models;
 using Microsoft.VisualBasic;
 using System.Security.Claims;
 using WebApplication1.Data;
+using WebApplication1.Interfaces;
+using WebApplication1.Services;
 
 namespace WebApplication1.Pages
 {
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
-        
-        private WebApplication1Context _context;
-  
+
+        private ILeapYearInterface _LeapYearService;
+
         [BindProperty]
         public Formularz FizzBuzz { set; get; }
         [BindProperty]
@@ -25,10 +27,10 @@ namespace WebApplication1.Pages
         public List<string> Results { get; set; }
 
         public string? Result { get; set; }
-        public IndexModel(ILogger<IndexModel> logger, WebApplication1Context context)
+        public IndexModel(ILogger<IndexModel> logger, ILeapYearInterface LeapYearService)
         {
             _logger = logger;
-            _context = context;
+            _LeapYearService = LeapYearService;
         }
 
         public void OnGet()
@@ -67,8 +69,8 @@ namespace WebApplication1.Pages
                 }
                 searchEntry.UserId = User.Identity.IsAuthenticated ? User.FindFirst(ClaimTypes.NameIdentifier).Value : "Brak";
                 searchEntry.UserName = User.Identity.IsAuthenticated ? User.Identity.Name : FizzBuzzImie.Imie;
-                _context.SearchEntries.Add(searchEntry);
-                _context.SaveChanges();
+                _LeapYearService.postNewSearchEntry(searchEntry);
+                _LeapYearService.saveChanges();
             }
        
             return Page();

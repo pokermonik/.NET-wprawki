@@ -8,16 +8,19 @@ using WebApplication1.Models;
 using Microsoft.Extensions.Configuration;
 using System.Configuration;
 using WebApplication1.ContosoUniversity;
+using WebApplication1.Interfaces;
+using WebApplication1.Services;
 
 namespace WebApplication1.Pages
 {
     public class HistoriaWyszukiwan : PageModel
     {
-        private readonly WebApplication1Context _context;
+     
+        private readonly ILeapYearInterface _LeapYearService;
         private readonly IConfiguration Configuration;
-        public HistoriaWyszukiwan(WebApplication1Context context, IConfiguration configuration)
+        public HistoriaWyszukiwan(ILeapYearInterface LeapYearService, IConfiguration configuration)
         {
-            _context = context;
+            _LeapYearService = LeapYearService;
             Configuration = configuration;
         }
         public PaginatedList<SearchEntry> SearchEntries{ get; set; }
@@ -40,8 +43,8 @@ namespace WebApplication1.Pages
             }
 
 
-            
-            IQueryable<SearchEntry> searchEntries = from s in _context.SearchEntries select s;
+
+            IQueryable<SearchEntry> searchEntries =_LeapYearService.GetAllSearchEntries();
       
      
             searchEntries = searchEntries.OrderByDescending(s => s.SearchDateTime);
@@ -56,11 +59,11 @@ namespace WebApplication1.Pages
 
         public IActionResult OnPost(int id)
         {
-            var entry = _context.SearchEntries.Find(id);
+            var entry = _LeapYearService.GetSearchEntryById(id);
             if (entry != null)
             {
-                _context.SearchEntries.Remove(entry);
-                _context.SaveChanges();
+                _LeapYearService.deleteEntry(entry);
+                _LeapYearService.saveChanges();
             }
             
 
