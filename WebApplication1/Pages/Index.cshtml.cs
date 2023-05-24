@@ -3,13 +3,19 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using WebApplication1.Forms;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using WebApplication1.Models;
+using Microsoft.VisualBasic;
+using System.Security.Claims;
+using WebApplication1.Data;
 
 namespace WebApplication1.Pages
 {
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
-
+        
+        private WebApplication1Context _context;
+  
         [BindProperty]
         public Formularz FizzBuzz { set; get; }
         [BindProperty]
@@ -19,9 +25,10 @@ namespace WebApplication1.Pages
         public List<string> Results { get; set; }
 
         public string? Result { get; set; }
-        public IndexModel(ILogger<IndexModel> logger)
+        public IndexModel(ILogger<IndexModel> logger, WebApplication1Context context)
         {
             _logger = logger;
+            _context = context;
         }
 
         public void OnGet()
@@ -33,7 +40,7 @@ namespace WebApplication1.Pages
 
             if (ModelState.IsValid)
             {
-
+           
                 Result = FizzBuzzImie.Checker(FizzBuzzImie.Imie) + FizzBuzz.Checker(FizzBuzz.Number);
                 if (HttpContext.Session.GetString("Results") != null)
                 {
@@ -45,9 +52,26 @@ namespace WebApplication1.Pages
                     Results = new List<string> { Result };
                 }
                 HttpContext.Session.SetString("Results",JsonConvert.SerializeObject(Results));
+
+
+
+
+
+                SearchEntry searchEntry = new SearchEntry();
+                searchEntry.Year = FizzBuzz.Number;
+                searchEntry.SearchDateTime = DateTime.Now;
+                searchEntry.Result = !(FizzBuzz.Checker(FizzBuzz.Number).Contains("nie"));
+                if (FizzBuzzImie.Imie == null)
+                {
+                    FizzBuzzImie.Imie = "Nie podano imienia";
+                }
+                searchEntry.UserId = User.Identity.IsAuthenticated ? User.FindFirst(ClaimTypes.NameIdentifier).Value : "Brak";
+                searchEntry.UserName = User.Identity.IsAuthenticated ? User.Identity.Name : FizzBuzzImie.Imie;
+                _context.SearchEntries.Add(searchEntry);
+                _context.SaveChanges();
             }
-     
-                return Page();
+       
+            return Page();
             
      
 

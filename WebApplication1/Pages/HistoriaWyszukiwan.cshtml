@@ -1,0 +1,66 @@
+﻿@page
+@using System.Security.Claims;
+@model WebApplication1.Pages.HistoriaWyszukiwan
+@{
+}
+<h1 class="display-4">Dzień Dobry!</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Data wyszukiwania</th>
+            <th>Rok</th>
+            <th>Wynik</th>
+            <th>Id Uzytkownika</th>
+            <th>Nazwa Uzytkownika</th>
+            @if((User.Identity.IsAuthenticated))
+            {
+            <th>Narzędzia</th>
+            }
+            
+            
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var entry in Model.SearchEntries)
+        {
+            <tr>
+                <td>@entry.Id</td>
+                <td>@entry.SearchDateTime</td>
+                <td>@entry.Year</td>
+                <td>@entry.Result</td>
+                <td>@entry.UserId</td>
+                <td>@entry.UserName</td>
+
+                @if (User.Identity.IsAuthenticated && entry.UserId == User.FindFirst(ClaimTypes.NameIdentifier)?.Value)
+                {
+                    <td>
+                        <form method="post" asp-page="./HistoriaWyszukiwan" asp-route-id="@entry.Id">
+                        <button type="submit">Usuń</button>
+                        </form>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+    
+</table>
+@{
+    var prevDisabled = !Model.SearchEntries.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.SearchEntries.HasNextPage ? "disabled" : "";
+}
+
+<a asp-page="./HistoriaWyszukiwan"
+   asp-route-sortOrder="@Model.CurrentSort"
+   asp-route-pageIndex="@(Model.SearchEntries.PageIndex - 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   class="btn btn-primary @prevDisabled">
+    Previous
+</a>
+<a asp-page="./HistoriaWyszukiwan"
+   asp-route-sortOrder="@Model.CurrentSort"
+   asp-route-pageIndex="@(Model.SearchEntries.PageIndex + 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   class="btn btn-primary @nextDisabled">
+    Next
+</a>

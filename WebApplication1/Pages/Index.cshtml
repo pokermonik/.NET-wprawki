@@ -2,26 +2,35 @@
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
-    
+
 }
 
 <div class"form-group col-md-6">
     <h1 class="display-4">Dzień Dobry!</h1>
     <span asp-validation-for="FizzBuzz.Number" class="text-danger" style="font-weight:bold;"></span>
-    
-        <form method="post" >
+
+    <form method="post" >
         <label asp-for="FizzBuzz.Number"></label>
         <br />
-            
+
         <input asp-for="FizzBuzz.Number" class="form-control" required  style="width:30%;"/>
-            <br/>
-        <label asp-for="FizzBuzzImie.Imie"></label>
-        <br />
-        <span asp-validation-for="FizzBuzzImie.Imie" class="text-danger" style="font-weight:bold;"></span>
-        <input asp-for="FizzBuzzImie.Imie" class="form-control" maxlength="100" required style="width:30%;" />
+        <br/>
+        @if (!User.Identity.IsAuthenticated)
+        {
+            <label asp-for="FizzBuzzImie.Imie"></label>
+            <br />
+            <span asp-validation-for="FizzBuzzImie.Imie" class="text-danger" style="font-weight:bold;"></span>
+            <input asp-for="FizzBuzzImie.Imie" class="form-control" maxlength="100" style="width:30%;" />
+        }
+        else
+        {
+
+            <input asp-for="FizzBuzzImie.Imie" class="form-control" maxlength="100" style="display:none;" value="@User.Identity.Name" />
+        }
         <button type="submit" class="btn btn-primary">Zatwierdź</button>
         </form>
         <br />
+
     @if (!string.IsNullOrEmpty(Model.Result))
     {
             <div class="alert alert-success" style="width:30%;" role="alert">

@@ -8,9 +8,9 @@ namespace WebApplication1.Forms
         [Display(Name = "Rok urodzenia")]
         [Required, Range(1899, 2022, ErrorMessage = "Oczekiwana wartość {0} z zakresu {1} i {2}.")]
         
-        public int? Number { get; set; }
+        public int Number { get; set; }
 
-        public String Checker(int? Number)
+        public String Checker(int Number)
         {
             String s = "w "+ Number.ToString()+" roku. To ";
             if(Number%4!=0)
