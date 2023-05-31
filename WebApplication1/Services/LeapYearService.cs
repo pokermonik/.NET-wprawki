@@ -1,36 +1,76 @@
 ﻿using System;
 using WebApplication1.Data;
 using WebApplication1.Interfaces;
+using WebApplication1.Migrations;
 using WebApplication1.Models;
+using WebApplication1.Repositories;
+using WebApplication1.ViewModels;
 
 namespace WebApplication1.Services
 {
     public class LeapYearService : ILeapYearInterface
     {
-        private readonly WebApplication1Context _context;
-        public LeapYearService(WebApplication1Context context)
+        private readonly IRepository _searchEntryRepository;
+        public LeapYearService(IRepository searchEntryRepository)
         {
-            _context = context;
+            _searchEntryRepository = searchEntryRepository;
         }
-        public IQueryable<SearchEntry> GetAllSearchEntries()
+        public IQueryable<SearchEntryVM> GetAllSearchEntries()
         {
-            return _context.SearchEntries;
+            var result = _searchEntryRepository.GetAllSearchEntries();
+            return result.Select(entry => new SearchEntryVM
+            {
+                Id = entry.Id,
+                UserId = entry.UserId,
+                UserName = entry.UserName,
+                SearchDateTime = entry.SearchDateTime,
+                Result = entry.Result,
+                Year = entry.Year
+            });
         }
-        public void postNewSearchEntry(SearchEntry entry)
+        public void postNewSearchEntry(SearchEntryVM entry)
         {
-            _context.SearchEntries.Add(entry);
+            SearchEntry _entry = new SearchEntry
+            {
+                Id = entry.Id,
+                UserId = entry.UserId,
+                UserName = entry.UserName,
+                SearchDateTime = entry.SearchDateTime,
+                Result = entry.Result,
+                Year = entry.Year
+            };
+            _searchEntryRepository.postNewSearchEntry(_entry);
         }
-        public void deleteEntry(SearchEntry entry)
+        public void deleteEntry(SearchEntryVM entry)
         {
-            _context.SearchEntries.Remove(entry);
+            SearchEntry _entry = new SearchEntry
+            {
+                Id = entry.Id,
+                UserId = entry.UserId,
+                UserName = entry.UserName,
+                SearchDateTime = entry.SearchDateTime,
+                Result = entry.Result,
+                Year = entry.Year
+            };
+            _searchEntryRepository.deleteEntry(_entry);
         }
-        public SearchEntry GetSearchEntryById(int id)
+        public SearchEntryVM GetSearchEntryById(int id)
         {
-            return _context.SearchEntries.Find(id);
+           var result = _searchEntryRepository.GetSearchEntryById(id);
+            SearchEntryVM entry = new SearchEntryVM
+            {
+                Id = result.Id,
+                UserId = result.UserId,
+                UserName = result.UserName,
+                SearchDateTime = result.SearchDateTime,
+                Result = result.Result,
+                Year = result.Year
+            };
+            return entry;
         }
         public void saveChanges()
         {
-            _context.SaveChanges();
+            _searchEntryRepository.saveChanges();
         }
     }
 }

@@ -9,6 +9,7 @@ using System.Security.Claims;
 using WebApplication1.Data;
 using WebApplication1.Interfaces;
 using WebApplication1.Services;
+using WebApplication1.ViewModels;
 
 namespace WebApplication1.Pages
 {
@@ -59,7 +60,7 @@ namespace WebApplication1.Pages
 
 
 
-                SearchEntry searchEntry = new SearchEntry();
+                SearchEntryVM searchEntry = new SearchEntryVM();
                 searchEntry.Year = FizzBuzz.Number;
                 searchEntry.SearchDateTime = DateTime.Now;
                 searchEntry.Result = !(FizzBuzz.Checker(FizzBuzz.Number).Contains("nie"));

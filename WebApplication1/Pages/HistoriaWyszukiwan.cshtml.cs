@@ -10,6 +10,7 @@ using System.Configuration;
 using WebApplication1.ContosoUniversity;
 using WebApplication1.Interfaces;
 using WebApplication1.Services;
+using WebApplication1.ViewModels;
 
 namespace WebApplication1.Pages
 {
@@ -23,7 +24,7 @@ namespace WebApplication1.Pages
             _LeapYearService = LeapYearService;
             Configuration = configuration;
         }
-        public PaginatedList<SearchEntry> SearchEntries{ get; set; }
+        public PaginatedList<SearchEntryVM> SearchEntries{ get; set; }
         public string CurrentFilter { get; set; }
         public string CurrentSort { get; set; }
 
@@ -44,13 +45,13 @@ namespace WebApplication1.Pages
 
 
 
-            IQueryable<SearchEntry> searchEntries =_LeapYearService.GetAllSearchEntries();
+            IQueryable<SearchEntryVM> searchEntries =_LeapYearService.GetAllSearchEntries();
       
      
             searchEntries = searchEntries.OrderByDescending(s => s.SearchDateTime);
 
             var pageSize = Configuration.GetValue("PageSize", 20);
-            SearchEntries = await PaginatedList<SearchEntry>.CreateAsync(
+            SearchEntries = await PaginatedList<SearchEntryVM>.CreateAsync(
                 searchEntries.AsNoTracking(), pageIndex ?? 1, pageSize);
 
 

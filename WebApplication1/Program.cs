@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using WebApplication1;
 using WebApplication1.Data;
 using WebApplication1.Interfaces;
+using WebApplication1.Repositories;
 using WebApplication1.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,7 +17,8 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.AddTransient<ILeapYearInterface, LeapYearService>();
+builder.Services.AddProjectService();
+
 builder.Services.AddMemoryCache();
 builder.Services.AddSession();
 
